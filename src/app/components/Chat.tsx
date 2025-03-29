@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import io from "socket.io-client";
 import withAuth from "@/app/lib/withAuth";
 
-const socket = io("http://localhost:3001");
+const socket = io("http://localhost:4000");
 
 function Chat() {
   const [messages, setMessages] = useState<string[]>([]);

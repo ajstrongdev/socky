@@ -21,8 +21,21 @@ export default function Home() {
         try {
             const res = await createUserWithEmailAndPassword(email, password);
             if (res?.user) {
-                console.log("User signed up successfully:", res.user);
-                router.push("/chat");
+                // Save the username to the database
+                const response = await fetch("http://localhost:3001/users/create", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        username,
+                        email
+                    }),
+                });
+                if (response.status == 200) {
+                    // Redirect to the home page
+                    router.push("/");
+                }
             }
         }
         catch (error) {
