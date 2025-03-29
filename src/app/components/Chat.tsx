@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
+import withAuth from "@/app/lib/withAuth";
 
 const socket = io("http://localhost:3001");
 
-export default function Chat() {
+function Chat() {
   const [messages, setMessages] = useState<string[]>([]);
 
   useEffect(() => {
@@ -30,3 +31,5 @@ export default function Chat() {
     </div>
   );
 }
+
+export default withAuth(Chat);
