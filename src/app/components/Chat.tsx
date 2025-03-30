@@ -10,8 +10,8 @@ function Chat() {
   const [messages, setMessages] = useState<string[]>([]);
 
   useEffect(() => {
-    socket.on("chat message", (msg) => {
-      setMessages((prev) => [...prev, msg]);
+    socket.on("chat message", (uname, msg) => {
+      setMessages((prev) => [...prev, `${uname}: ${msg}`]);
     });
 
     return () => {
