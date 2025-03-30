@@ -2,18 +2,44 @@
 
 import io from "socket.io-client";
 
-import { useState } from "react";
-const socket = io("http://localhost:3001");
+import { useState, useEffect } from "react";
+const socket = io("http://localhost:4000");
+
+// Firebase
+import { auth } from '@/app/firebase/config';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 export default function MessageBox() {
+    const [user] = useAuthState(auth);
     const [message, setMessage] = useState<string | null>("");
-
+    const [username, setUsername] = useState<string | null>(null);
+    
     const sendMessage = () => {
         if (message && message.trim()) {
-          socket.emit("chat message", message);
-          setMessage("");
-        }
+            socket.emit("chat message", username, message);
+            setMessage("");
+          }
       };
+
+    useEffect(() => {
+        if (user) {
+            const fetchUsername = async (email:string) => {
+                const response = await fetch("http://localhost:3001/users/getUsername", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ email: email }), 
+                });
+                const data = await response.json();
+                console.log(data);
+                setUsername(data.username);
+            };
+            if (user.email) {
+                fetchUsername(user.email);
+            }
+        }
+    }, [user]);
 
     return(
         <>
