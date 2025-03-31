@@ -58,8 +58,10 @@ io.on("connection", (socket) => {
 // Routes
 import databaseRoutes from "./routes/database.js";
 import userRoutes from "./routes/users.js";
+import messageRoutes from "./routes/message.js";
 app.use("/database", databaseRoutes);
 app.use("/users", userRoutes);
+app.use("/message", messageRoutes);
 
 // Start Express API Server
 app.listen(3001, () => console.log("Backend API running on port 3001"));
