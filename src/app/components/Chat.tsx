@@ -9,6 +9,17 @@ const socket = io("http://localhost:4000");
 function Chat() {
   const [messages, setMessages] = useState<string[]>([]);
 
+  // Load previous messages from the server
+  useEffect(() => {
+    const fetchMessages = async () => {
+      const response = await fetch("http://localhost:3001/message/getMessages");
+      const data = await response.json();
+      setMessages(data);
+    };
+
+    fetchMessages();
+  }, []);
+
   useEffect(() => {
     socket.on("chat message", (uname, msg) => {
       setMessages((prev) => [...prev, `${uname}: ${msg}`]);

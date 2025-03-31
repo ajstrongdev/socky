@@ -17,9 +17,25 @@ export default function MessageBox() {
     const sendMessage = () => {
         if (message && message.trim()) {
             socket.emit("chat message", username, message);
+            if (username) {
+                storeMessage(username, message);
+            }
             setMessage("");
           }
       };
+
+    const storeMessage = async (username:string, message:string) => {
+        const combinedMessage = `${username}: ${message}`;
+        const response = await fetch("http://localhost:3001/message/onMessage", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email: user?.email, messageBody: combinedMessage }), 
+        });
+        const data = await response.json();
+        console.log(data);
+    }
 
     useEffect(() => {
         if (user) {
