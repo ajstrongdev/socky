@@ -3,7 +3,7 @@
 // Firebase
 import { auth } from "@/app/firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
-// React / Next
+// React
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 

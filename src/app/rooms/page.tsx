@@ -1,6 +1,8 @@
 "use client";
 
 import withAuth from "@/app/lib/withAuth";
+import { auth } from '@/app/firebase/config';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import {useState, useEffect} from "react";
 import { useRouter } from "next/navigation";
 
@@ -12,35 +14,79 @@ interface Room {
 
 function Home() {
     const router = useRouter();
-    const [roomList, setRoomList] = useState<Room[]>([]);
+    const [globalRoomList, setGlobalRoomList] = useState<Room[]>([]);
+    const [userRoomList, setUserRoomList] = useState<Room[]>([]);
+    const [user] = useAuthState(auth);
 
     useEffect(() => {
-        const getRooms = async () => {
-            const response = await fetch('http://localhost:3001/rooms/get', {
-                method: 'GET',
+
+        const getUserID = async () => {
+            const response = await fetch('http://localhost:3001/users/getUserDetails', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json', 
-                }
+                },
+                body: JSON.stringify({ email: user?.email }),
+            });
+            const data = await response.json();
+            console.log("User data")
+            console.log(data);
+            if (response.ok) {
+                const userid = data[0].user_id;
+                console.log("User ID:", userid);
+                getGlobalRooms(userid);
+                getUserRooms(userid);
+            } else {
+                console.error('Failed to fetch user ID:', data);
+            }
+        }
+
+        const getUserRooms = async (userid:number) => {
+            const response = await fetch('http://localhost:3001/rooms/getUser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', 
+                },
+                body: JSON.stringify({ user_id: userid }),
+            });
+            const data = await response.json();
+            console.log("User room data")
+            console.log(data);
+            if (response.ok) {
+                setUserRoomList(data);
+            } else {
+                console.error('Failed to fetch user rooms:', data);
+            }
+        }
+
+        const getGlobalRooms = async (userid:number) => {
+            const response = await fetch('http://localhost:3001/rooms/getGlobal', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', 
+                },
+                body: JSON.stringify({ user_id: userid }),
             });
             const data = await response.json();
             console.log("Room data")
             console.log(data);
             if (response.ok) {
-                setRoomList(data);
+                setGlobalRoomList(data);
             } else {
                 console.error('Failed to fetch rooms:', data);
             }
         }
-        getRooms();
+        getUserID();
+
     }, []);
 
     return (
         <>
-            <div className="flex flex-col justify-center items-center h-screen bg-green-200">
-                <h1 className="text-4xl font-bold mb-4">Rooms</h1>
-                <div className="flex flex-col gap-4">
-                    {roomList && roomList.length > 0 ? (
-                        roomList.map((room, index) => (
+            <div className="h-screen bg-green-200">
+                <h1 className="text-4xl font-bold mb-4 text-center py-8">Your Rooms:</h1>
+                <div className="flex flex-grid gap-4 mb-4 w-[85%] m-auto">
+                    {userRoomList && userRoomList.length > 0 ? (
+                        userRoomList.map((room, index) => (
                             <div key={index} className="bg-white border border-gray-300 rounded-lg p-4 shadow-md">
                                 {room && <h2 className="text-xl font-semibold">{room.room_name}</h2>}
                                 <button 
@@ -51,7 +97,7 @@ function Home() {
                                     router.push("/chat");
                                 }}
                                 >
-                                    Join
+                                    Chat!
                                 </button>
                             </div>
                         ))
@@ -59,10 +105,28 @@ function Home() {
                         <p>No rooms available</p>
                     )}
                 </div>
-                <div className="bg-green-100 border border-slate-700/50 rounded-lg p-8">
-
+                <h1 className="text-4xl font-bold mb-4 text-center py-8">Global Rooms:</h1>
+                <div className="flex flex-grid gap-4 mb-4 w-[85%] m-auto">
+                    {globalRoomList && globalRoomList.length > 0 ? (
+                        globalRoomList.map((room, index) => (
+                            <div key={index} className="bg-white border border-gray-300 rounded-lg p-4 shadow-md">
+                                {room && <h2 className="text-xl font-semibold">{room.room_name}</h2>}
+                                <button 
+                                className="mt-2 bg-green-500 text-white py-2 px-4 rounded-lg"
+                                onClick={() => {
+                                    console.log("Joining room:", room.room_id);
+                                    sessionStorage.setItem("joinedRoom", room.room_id.toString())
+                                    router.push("/chat");
+                                }}
+                                >
+                                    Join Room
+                                </button>
+                            </div>
+                        ))
+                    ) : (
+                        <p>No rooms available</p>
+                    )}
                 </div>
-
             </div>
         </>
     )

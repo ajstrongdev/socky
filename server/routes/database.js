@@ -32,13 +32,14 @@ router.get("/create", async (req, res, next) => {
         room_id INT PRIMARY KEY AUTO_INCREMENT,
         room_name VARCHAR(255) NOT NULL,
         owner INT NOT NULL,
+        global TINYINT(1) DEFAULT 0,
         FOREIGN KEY (owner) REFERENCES Users(user_id)
       );
     `);
 
     // More for development
     await pool.execute(`
-        INSERT INTO Rooms (room_name, owner) VALUES ("General", 1), ("Memes", 1);
+        INSERT INTO Rooms (room_name, owner, global) VALUES ("General", 1, 1), ("Memes", 1, 0);
       `);
 
     await pool.execute(`
@@ -62,8 +63,15 @@ router.get("/create", async (req, res, next) => {
           FOREIGN KEY (user_id) REFERENCES Users(user_id)
         );
       `);
+
+    // Add development user to meme room
+    await pool.execute(`
+        INSERT INTO RoomMembers (room_id, user_id) VALUES (2, 1);
+      `);
     res.json({ message: "Database created successfully" });
   }
+
+
   catch (error) {
     next(error);
   }
