@@ -1,38 +1,32 @@
-// Authentication middleware for Next.JS
+// Auth Middleware
 
 // Firebase
 import { auth } from "@/app/firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
-
-// Other
+// React / Next
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export default function withAuth<T extends object>(
     WrappedComponent: React.ComponentType<T>
 ) {
     function ProtectedRoute(props: T) {
-        const [isLoading, setIsLoading] = useState(true);
-        const [isAuthenticated, setIsAuthenticated] = useState(false);
-        const [user] = useAuthState(auth);
+        const [user, loading] = useAuthState(auth);
         const router = useRouter();
 
         useEffect(() => {
-            if (user) {
-                setIsAuthenticated(true);
-                setIsLoading(false);
-            } else {
-                setIsAuthenticated(false);
-                setIsLoading(false);
-                router.push("/");
+            if (!loading) {
+                if (!user) {
+                    router.push("/");
+                }
             }
-        }, [user, router]);
+        }, [user, loading, router]);
 
-        if (isLoading) {
+        if (loading) {
             return <div>Loading...</div>;
         }
 
-        if (!isAuthenticated) {
+        if (!user) {
             return null;
         }
 

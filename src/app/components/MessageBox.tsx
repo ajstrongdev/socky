@@ -40,7 +40,7 @@ export default function MessageBox() {
     useEffect(() => {
         if (user) {
             const fetchUsername = async (email:string) => {
-                const response = await fetch("http://localhost:3001/users/getUsername", {
+                const response = await fetch("http://localhost:3001/users/getUserDetails", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -49,7 +49,7 @@ export default function MessageBox() {
                 });
                 const data = await response.json();
                 console.log(data);
-                setUsername(data.username);
+                setUsername(data[0].username);
             };
             if (user.email) {
                 fetchUsername(user.email);
