@@ -4,7 +4,7 @@ import pool from "../db.js";
 const router = express.Router();
 
 router.post("/onMessage", async (req, res, next) => {
-    const { email, messageBody } = req.body;
+    const { email, messageBody, room_id } = req.body;
     // Get user_id from email
     const [userResult] = await pool.execute("SELECT user_id FROM Users WHERE email = ?", [email]);
     const userId = userResult.flat()[0]?.user_id;
@@ -13,7 +13,7 @@ router.post("/onMessage", async (req, res, next) => {
     }
     try { 
         const [result] = await pool.execute(
-            "INSERT INTO Messages (user_id, message) VALUES (?, ?)", [userId, messageBody]
+            "INSERT INTO Messages (user_id, message, room_id) VALUES (?, ?, ?)", [userId, messageBody, room_id]
         );
         res.json({ message: "Message sent", message_id: result.insertId });
     } catch (error) {
@@ -21,8 +21,9 @@ router.post("/onMessage", async (req, res, next) => {
     }
 });
 
-router.get("/getMessages", async (req, res, next) => {
-    const [messages] = await pool.execute("SELECT message FROM Messages");
+router.post("/getMessages", async (req, res, next) => {
+    const { room_id } = req.body;
+    const [messages] = await pool.execute("SELECT message FROM Messages WHERE room_id = ?", [room_id]);
     return res.json(messages.map((message) => message.message));
 });
 

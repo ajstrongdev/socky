@@ -13,6 +13,7 @@ export default function MessageBox() {
     const [user] = useAuthState(auth);
     const [message, setMessage] = useState<string | null>("");
     const [username, setUsername] = useState<string | null>(null);
+    const [roomid, setRoomId] = useState<number | null>(null);
     
     const sendMessage = () => {
         if (message && message.trim()) {
@@ -31,7 +32,7 @@ export default function MessageBox() {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ email: user?.email, messageBody: combinedMessage }), 
+            body: JSON.stringify({ email: user?.email, messageBody: combinedMessage, room_id: roomid }), 
         });
         const data = await response.json();
         console.log(data);
@@ -56,6 +57,16 @@ export default function MessageBox() {
             }
         }
     }, [user]);
+
+    useEffect(() => {
+        const getRoomId = () => {
+            const roomId = sessionStorage.getItem("joinedRoom");
+            if (roomId) {
+              setRoomId(parseInt(roomId));
+            }
+          }
+        getRoomId();
+    }, []);
 
     return(
         <>

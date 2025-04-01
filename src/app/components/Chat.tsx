@@ -11,13 +11,27 @@ function Chat() {
 
   // Load previous messages from the server
   useEffect(() => {
-    const fetchMessages = async () => {
-      const response = await fetch("http://localhost:3001/message/getMessages");
+    const getRoomId = () => {
+      const roomId = sessionStorage.getItem("joinedRoom");
+      if (roomId) {
+        fetchMessages(parseInt(roomId));
+      }
+    }
+    const fetchMessages = async (roomid:number) => {
+      const response = await fetch("http://localhost:3001/message/getMessages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          room_id: roomid,
+        }),
+      });
       const data = await response.json();
       setMessages(data);
     };
 
-    fetchMessages();
+    getRoomId();
   }, []);
 
   useEffect(() => {

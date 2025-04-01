@@ -11,6 +11,7 @@ interface Room {
 }
 
 function Home() {
+    const router = useRouter();
     const [roomList, setRoomList] = useState<Room[]>([]);
 
     useEffect(() => {
@@ -46,7 +47,8 @@ function Home() {
                                 className="mt-2 bg-green-500 text-white py-2 px-4 rounded-lg"
                                 onClick={() => {
                                     console.log("Joining room:", room.room_id);
-                                    // Todo: Add logic here
+                                    sessionStorage.setItem("joinedRoom", room.room_id.toString())
+                                    router.push("/chat");
                                 }}
                                 >
                                     Join

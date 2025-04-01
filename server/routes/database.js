@@ -28,25 +28,30 @@ router.get("/create", async (req, res, next) => {
       `);
 
     await pool.execute(`
+      CREATE TABLE IF NOT EXISTS Rooms (
+        room_id INT PRIMARY KEY AUTO_INCREMENT,
+        room_name VARCHAR(255) NOT NULL,
+        owner INT NOT NULL,
+        FOREIGN KEY (owner) REFERENCES Users(user_id)
+      );
+    `);
+
+    // More for development
+    await pool.execute(`
+        INSERT INTO Rooms (room_name, owner) VALUES ("General", 1), ("Memes", 1);
+      `);
+
+    await pool.execute(`
         CREATE TABLE IF NOT EXISTS Messages (
           message_id INT PRIMARY KEY AUTO_INCREMENT,
           user_id INT NOT NULL,
           message TEXT NOT NULL,
           room_id INT NOT NULL,
           timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-          FOREIGN KEY (user_id) REFERENCES Users(user_id)
+          FOREIGN KEY (user_id) REFERENCES Users(user_id),
           FOREIGN KEY (room_id) REFERENCES Rooms(room_id)
         );
       `)
-
-    await pool.execute(`
-        CREATE TABLE IF NOT EXISTS Rooms (
-          room_id INT PRIMARY KEY AUTO_INCREMENT,
-          room_name VARCHAR(255) NOT NULL,
-          owner INT NOT NULL,
-          FOREIGN KEY (owner) REFERENCES Users(user_id)
-        );
-      `);
 
     await pool.execute(`
         CREATE TABLE IF NOT EXISTS RoomMembers (
