@@ -17,7 +17,7 @@ export default function MessageBox() {
     
     const sendMessage = () => {
         if (message && message.trim()) {
-            socket.emit("chat message", username, message);
+            socket.emit("chat message", roomid, username, message);
             if (username) {
                 storeMessage(username, message);
             }

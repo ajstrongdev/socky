@@ -35,8 +35,11 @@ function Chat() {
   }, []);
 
   useEffect(() => {
-    socket.on("chat message", (uname, msg) => {
-      setMessages((prev) => [...prev, `${uname}: ${msg}`]);
+    socket.on("chat message", (roomid, uname, msg) => {
+      if (roomid == parseInt(sessionStorage.getItem("joinedRoom") || "")) {
+        const combinedMessage = `${uname}: ${msg}`;
+        setMessages((prevMessages) => [...prevMessages, combinedMessage]);
+      }
     });
 
     return () => {

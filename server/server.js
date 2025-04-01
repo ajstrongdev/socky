@@ -46,8 +46,8 @@ startDatabase();
 io.on("connection", (socket) => {
   console.log("A user connected");
 
-  socket.on("chat message", (uname, msg) => {
-    io.emit("chat message", uname, msg); // Broadcast to all clients
+  socket.on("chat message", (roomid, uname, msg) => {
+    io.emit("chat message", roomid, uname, msg); // Broadcast to all clients
   });
 
   socket.on("disconnect", () => {
