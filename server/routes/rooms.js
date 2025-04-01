@@ -4,6 +4,38 @@ import pool from "../db.js";
 const router = express.Router();
 
 // Create room
+router.post("/create", async (req, res, next) => {
+    try {
+        const { room_name, owner, global } = req.body;
+        if (!room_name || !owner) {
+            return res.status(400).json({ error: "Room name and owner are required" });
+        }
+        const [result] = await pool.execute(
+            "INSERT INTO Rooms (room_name, owner, global) VALUES (?, ?, ?)",
+            [room_name, owner, global]
+        );
+        res.json({ message: "Room created", room_id: result.insertId });
+    } catch (err) {
+        next(err);
+    }
+});
+
+// Join room
+router.post("/join", async (req, res, next) => {
+    try {
+        const { room_id, user_id } = req.body;
+        if (!room_id || !user_id) {
+            return res.status(400).json({ error: "Room ID and user ID are required" });
+        }
+        const [result] = await pool.execute(
+            "INSERT INTO RoomMembers (room_id, user_id) VALUES (?, ?)",
+            [room_id, user_id]
+        );
+        res.json({ message: "Joined room" });
+    } catch (err) {
+        next(err);
+    }
+});
 
 // Get room list
 router.get("/get", async (req, res, next) => {

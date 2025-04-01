@@ -5,6 +5,7 @@ import { auth } from '@/app/firebase/config';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import {useState, useEffect} from "react";
 import { useRouter } from "next/navigation";
+import { join } from "path";
 
 interface Room {
     room_id: number;
@@ -33,7 +34,7 @@ function Home() {
             console.log(data);
             if (response.ok) {
                 const userid = data[0].user_id;
-                console.log("User ID:", userid);
+                sessionStorage.setItem("userID", userid.toString());
                 getGlobalRooms(userid);
                 getUserRooms(userid);
             } else {
@@ -80,6 +81,19 @@ function Home() {
 
     }, []);
 
+    const joinRoom = async (roomid:number) => {
+        await fetch("http://localhost:3001/rooms/join", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                user_id: parseInt(sessionStorage.getItem("userID") || "0"),
+                room_id: roomid,
+            }),
+        });
+    }
+
     return (
         <>
             <div className="h-screen bg-green-200">
@@ -115,6 +129,7 @@ function Home() {
                                 className="mt-2 bg-green-500 text-white py-2 px-4 rounded-lg"
                                 onClick={() => {
                                     console.log("Joining room:", room.room_id);
+                                    joinRoom(room.room_id);
                                     sessionStorage.setItem("joinedRoom", room.room_id.toString())
                                     router.push("/chat");
                                 }}

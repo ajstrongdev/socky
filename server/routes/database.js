@@ -63,11 +63,6 @@ router.get("/create", async (req, res, next) => {
           FOREIGN KEY (user_id) REFERENCES Users(user_id)
         );
       `);
-
-    // Add development user to meme room
-    await pool.execute(`
-        INSERT INTO RoomMembers (room_id, user_id) VALUES (2, 1);
-      `);
     res.json({ message: "Database created successfully" });
   }
 
