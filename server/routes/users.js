@@ -18,23 +18,55 @@ router.post("/create", async (req, res, next) => {
     }
 });
 
-// Get username
-router.post("/getUsername", async (req, res, next) => {
+// Get user details from email
+router.post("/getUserDetails" , async (req, res, next) => {
     try {
         const { email } = req.body;
         const result = await pool.execute(
-            "SELECT username FROM Users WHERE email = ?", [email]
+            "SELECT * FROM Users WHERE email = ?", [email]
         );
-        if (result[0].length > 0) {
-            const flattenedResult = result[0].flat();
-            res.json({ username: flattenedResult[0].username });
-        } else {
-            res.status(404).json({ message: "User not found" });
-        }
+        res.json(result[0]);
     } 
     catch (error) {
         next(error);
     }
 });
+
+// // Get username
+// router.post("/getUsername", async (req, res, next) => {
+//     try {
+//         const { email } = req.body;
+//         const result = await pool.execute(
+//             "SELECT username FROM Users WHERE email = ?", [email]
+//         );
+//         if (result[0].length > 0) {
+//             const flattenedResult = result[0].flat();
+//             res.json({ username: flattenedResult[0].username });
+//         } else {
+//             res.status(404).json({ message: "User not found" });
+//         }
+//     } 
+//     catch (error) {
+//         next(error);
+//     }
+// });
+
+// // Get user by ID
+// router.post("/getUID", async (req,res,next) => {
+//     try {
+//         const { email } = req.body;
+//         const result = await pool.execute(
+//             "SELECT user_id FROM Users WHERE email = ?", [email]
+//         );
+//         if (result[0].length > 0) {
+//             const flattenedResult = result[0].flat();
+//             res.json({ user_id: flattenedResult[0].user_id });
+//         } else {
+//             res.status(404).json({ message: "User not found" });
+//         } 
+//     } catch (error) {
+//         next(error);
+//     }
+// })
 
 export default router;

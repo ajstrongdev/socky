@@ -46,8 +46,8 @@ startDatabase();
 io.on("connection", (socket) => {
   console.log("A user connected");
 
-  socket.on("chat message", (uname, msg) => {
-    io.emit("chat message", uname, msg); // Broadcast to all clients
+  socket.on("chat message", (roomid, uname, msg) => {
+    io.emit("chat message", roomid, uname, msg); // Broadcast to all clients
   });
 
   socket.on("disconnect", () => {
@@ -59,9 +59,11 @@ io.on("connection", (socket) => {
 import databaseRoutes from "./routes/database.js";
 import userRoutes from "./routes/users.js";
 import messageRoutes from "./routes/message.js";
+import roomRoutes from "./routes/rooms.js";
 app.use("/database", databaseRoutes);
 app.use("/users", userRoutes);
 app.use("/message", messageRoutes);
+app.use("/rooms", roomRoutes);
 
 // Start Express API Server
 app.listen(3001, () => console.log("Backend API running on port 3001"));
