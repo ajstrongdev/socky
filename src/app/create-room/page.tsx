@@ -5,7 +5,6 @@ import { auth } from '@/app/firebase/config';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { join } from "path";
 
 function Home() {
     const router = useRouter();
