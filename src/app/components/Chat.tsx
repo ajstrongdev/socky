@@ -34,6 +34,31 @@ function Chat() {
     getRoomId();
   }, []);
 
+  // Temp fix for sockets not working across multiple devices therefore not updating messages
+  const refreshMessages = async () => {
+    const roomId = sessionStorage.getItem("joinedRoom");
+    if (roomId) {
+      const response = await fetch("http://localhost:3001/message/getMessages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          room_id: parseInt(roomId),
+        }),
+      });
+      const data = await response.json();
+      setMessages(data);
+    }
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refreshMessages();
+    }, 5000); // Refresh every 5 seconds
+    return () => clearInterval(interval);
+  }, []);
+
   useEffect(() => {
     socket.on("chat message", (roomid, uname, msg) => {
       if (roomid == parseInt(sessionStorage.getItem("joinedRoom") || "")) {

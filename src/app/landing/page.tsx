@@ -21,9 +21,9 @@ function Home() {
 
     return (
         <>
-        <div className="bg-green-200 h-screen w-screen">
+        <div className="bg-green-200 h-full w-screen">
         <DynamicMenu menuItems={menuItems} />
-            <div className="grid grid-cols-1 md:grid-cols-[50%_50%]">
+            <div className="grid grid-cols-1 md:grid-cols-[50%_50%] pb-8">
                 <RoomList />
             </div>
         </div>
