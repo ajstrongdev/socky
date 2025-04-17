@@ -13,5 +13,4 @@ const openPool = mysql.createPool({
   queueLimit: 0,
 });
 
-
 export default openPool;

@@ -40,6 +40,28 @@ export default function Home() {
     }
 };
 
+    // Ensure database exists
+    useEffect(() => {
+        const checkDatabase = async () => {
+            const res = await fetch("/api/databaseExists");
+            const data = await res.json();
+            if (data.message === "Database does not exist") {
+                console.error("Database does not exist");
+                // Create database if it doesn't exist
+                const response = await fetch("/api/createDatabase");
+                const result = await response.json();
+                if (result.error) {
+                    console.error("Error creating database:", result.error);
+                } else {
+                    console.log("Database created successfully");
+                }
+            } else {
+                console.log("Database exists");
+            }
+        };
+        checkDatabase();
+    }, []);
+
 
     return (
         <div className="flex flex-col justify-center items-center h-screen bg-green-200">

@@ -12,7 +12,7 @@ function Chat() {
   // Load previous messages from the server
   useEffect(() => {
     const fetchMessages = async () => {
-      const response = await fetch("http://localhost:3001/message/getMessages");
+      const response = await fetch("/api/loadMessages");
       const data = await response.json();
       setMessages(data);
     };

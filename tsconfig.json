@@ -22,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "server/index.ks", "server/server.js", "server/routes/database.js", "server/no-db.js", "server/db.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "server/index.ks", "server/server.js", "server/routes/database.js", "server/no-db.js", "server/db.js", "src/app/api/onMessage"],
   "exclude": ["node_modules"]
 }

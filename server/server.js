@@ -32,17 +32,6 @@ const io = new Server(server, {
   },
 });
 
-// Create database if it doesn't exist
-const startDatabase = async () => {
-  const exists = await fetch("http://localhost:3001/database/exists");
-  const response = await exists.json();
-  if (response?.DatabaseExists === 0) {
-    await fetch("http://localhost:3001/database/create");
-  }
-  console.log("Database check complete", response);
-}
-startDatabase();
-
 io.on("connection", (socket) => {
   console.log("A user connected");
 
@@ -54,17 +43,6 @@ io.on("connection", (socket) => {
     console.log("User disconnected");
   });
 });
-
-// Routes
-import databaseRoutes from "./routes/database.js";
-import userRoutes from "./routes/users.js";
-import messageRoutes from "./routes/message.js";
-app.use("/database", databaseRoutes);
-app.use("/users", userRoutes);
-app.use("/message", messageRoutes);
-
-// Start Express API Server
-app.listen(3001, () => console.log("Backend API running on port 3001"));
 
 // Start WebSocket Server
 server.listen(4000, () => {
