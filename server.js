@@ -1,29 +1,19 @@
-import express from "express";
 import { createServer } from "http";
+import next from "next";
 import { Server } from "socket.io";
-import cors from "cors";
 import dotenv from "dotenv";
 
-// Load environment variables
 dotenv.config();
 
-// Create Express app
-const app = express();
-app.use(express.json());
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    exposedHeaders: ["Content-Disposition"],
-    credentials: true,
-  })
-);
+const dev = process.env.NODE_ENV !== "production";
+const app = next({ dev });
+const handle = app.getRequestHandler();
 
-// Create HTTP server
-const server = createServer(app);
+// SocketIO Server
+const server = createServer((req, res) => {
+  handle(req, res);
+});
 
-// Setup Socket.IO
 const io = new Server(server, {
   cors: {
     origin: "http://localhost:3000",
@@ -33,17 +23,18 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   console.log("A user connected");
-
+  // Chat messages
   socket.on("chat message", (uname, msg) => {
-    io.emit("chat message", uname, msg); // Broadcast to all clients
+    io.emit("chat message", uname, msg);
   });
 
   socket.on("disconnect", () => {
-    console.log("User disconnected");
+    console.log("A user disconnected");
   });
 });
 
-// Start WebSocket Server
-server.listen(4000, () => {
-  console.log("Socket.IO server running on port 4000");
+app.prepare().then(() => {
+  server.listen(4000, (err) => {
+    if (err) throw err;
+  });
 });
