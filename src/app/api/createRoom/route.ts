@@ -12,8 +12,7 @@ export async function POST(req: NextRequest) {
             'INSERT INTO Rooms (room_name, owner, global) VALUES (?, ?, ?)',
             [room_name, owner, global]
         );
-        const insertId = result[0].insertId;
-        return NextResponse.json({message: "Room created successfully", id: insertId}, { status: 201 });
+        return NextResponse.json({message: "Room created successfully"});
     } catch (error) {
         console.error(error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

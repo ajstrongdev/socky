@@ -6,7 +6,7 @@ type UserResult = { user_id: number } & RowDataPacket;
 
 export async function POST(req: NextRequest) {
     try {
-        const { email, messageBody } = await req.json();
+        const { email, messageBody, room_id } = await req.json();
         // Get userid from email
         const [userRows] = await pool.query<UserResult[]>(
             `SELECT user_id FROM Users WHERE email = ?`,
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
         }
         // Insert 
         const [result] = await pool.execute<ResultSetHeader>(
-            "INSERT INTO Messages (user_id, message) VALUES (?, ?)", [userId, messageBody]
+            "INSERT INTO Messages (user_id, message, room_id) VALUES (?, ?, ?)", [userId, messageBody, room_id]
         );
         return NextResponse.json({ message: "Message sent", message_id: result.insertId });
     } catch (error) {

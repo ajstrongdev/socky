@@ -28,27 +28,13 @@ function Home() {
         if (response.status == 200) {
             const data = await response.json();
             if (data) {
-                const id = data.room_id;
-                joinRoom(id);
+                joinRoom();
             }
         }
     }
 
-    const joinRoom = async (roomid:number) => {
-        console.log("Joining room: " + roomid);
-        const response = await fetch("/api/joinRoom", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                room_id: roomid,
-                user_id: userid,
-            }),
-        });
-        if (response.status == 200) {
-            router.push("/rooms");
-        }
+    const joinRoom = async () => {
+        router.push("/rooms");
     }
 
     useEffect(() => {
@@ -64,7 +50,7 @@ function Home() {
             console.log("User data")
             console.log(data);
             if (response.ok) {
-                const uuid = data[0].user_id;
+                const uuid = data.user_id;
                 setUserId(uuid);
             } else {
                 console.error('Failed to fetch user ID:', data);

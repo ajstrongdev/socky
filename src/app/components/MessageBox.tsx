@@ -50,7 +50,7 @@ export default function MessageBox() {
                 });
                 const data = await response.json();
                 console.log(data);
-                setUsername(data[0].username);
+                setUsername(data.username);
             };
             if (user.email) {
                 fetchUsername(user.email);

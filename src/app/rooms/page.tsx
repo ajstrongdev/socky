@@ -32,7 +32,7 @@ function Home() {
             console.log("User data")
             console.log(data);
             if (response.ok) {
-                const userid = data[0].user_id;
+                const userid = data.user_id;
                 sessionStorage.setItem("userID", userid.toString());
                 getGlobalRooms(userid);
                 getUserRooms(userid);

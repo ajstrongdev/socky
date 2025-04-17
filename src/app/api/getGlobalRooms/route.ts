@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
             "SELECT * FROM Rooms WHERE global = 1 AND room_id NOT IN (SELECT room_id FROM RoomMembers WHERE user_id = ?)",
             [user_id]
         );
-        NextResponse.json(rooms[0]);
+        return NextResponse.json(rooms[0]);
     } catch (error) {
         console.error(error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
