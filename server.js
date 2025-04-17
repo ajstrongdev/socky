@@ -3,7 +3,6 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import cors from "cors";
 import dotenv from "dotenv";
-import mysql from "mysql2/promise";
 
 // Load environment variables
 dotenv.config();
