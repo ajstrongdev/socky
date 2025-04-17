@@ -1,9 +1,6 @@
 import mysql from "mysql2/promise";
-import dotenv from "dotenv";
 
-dotenv.config();
-
-let pool = mysql.createPool({
+const pool = mysql.createPool({
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT),
   user: process.env.DB_USER,
@@ -13,8 +10,6 @@ let pool = mysql.createPool({
   connectionLimit: 10,
   queueLimit: 0,
 });
-
-export default pool;
 
 export const getPool = () => {
   let pool = mysql.createPool({
@@ -29,3 +24,5 @@ export const getPool = () => {
   });
   return pool;
 };
+
+export default pool;

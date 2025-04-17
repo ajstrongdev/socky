@@ -26,7 +26,7 @@ export default function MessageBox() {
 
     const storeMessage = async (username:string, message:string) => {
         const combinedMessage = `${username}: ${message}`;
-        const response = await fetch("http://localhost:3001/message/onMessage", {
+        const response = await fetch("/api/onMessage", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -40,7 +40,7 @@ export default function MessageBox() {
     useEffect(() => {
         if (user) {
             const fetchUsername = async (email:string) => {
-                const response = await fetch("http://localhost:3001/users/getUsername", {
+                const response = await fetch("/api/getUsername", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

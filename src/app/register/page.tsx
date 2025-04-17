@@ -22,7 +22,7 @@ export default function Home() {
             const res = await createUserWithEmailAndPassword(email, password);
             if (res?.user) {
                 // Save the username to the database
-                const response = await fetch("http://localhost:3001/users/create", {
+                const response = await fetch("/api/createUser", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
