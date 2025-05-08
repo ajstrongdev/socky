@@ -5,6 +5,7 @@ import { auth } from '@/app/firebase/config';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import {useState, useEffect} from "react";
 import { useRouter } from "next/navigation";
+import DynamicMenu from "@/app/components/DynamicMenu"
 
 interface Room {
     room_id: number;
@@ -18,13 +19,20 @@ function Home() {
     const [userRoomList, setUserRoomList] = useState<Room[]>([]);
     const [user] = useAuthState(auth);
 
+    const items = [
+      {
+          text: "Create Room",
+          action: () => router.push("/create-room"),
+      },
+    ]
+
     useEffect(() => {
 
         const getUserID = async () => {
             const response = await fetch('/api/getUserDetails', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json', 
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ email: user?.email }),
             });
@@ -45,7 +53,7 @@ function Home() {
             const response = await fetch('/api/getUserRooms', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json', 
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ user_id: userid }),
             });
@@ -63,7 +71,7 @@ function Home() {
             const response = await fetch('/api/getGlobalRooms', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json', 
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ user_id: userid }),
             });
@@ -96,13 +104,14 @@ function Home() {
     return (
         <>
             <div className="h-screen bg-green-200">
+              <DynamicMenu menuItems={items} />
                 <h1 className="text-4xl font-bold mb-4 text-center py-8">Your Rooms:</h1>
-                <div className="flex flex-grid gap-4 mb-4 w-[85%] m-auto">
+                <div className="flex flex-grid items-center gap-4 mb-4 w-[85%] m-auto">
                     {userRoomList && userRoomList.length > 0 ? (
                         userRoomList.map((room, index) => (
-                            <div key={index} className="bg-white border border-gray-300 rounded-lg p-4 shadow-md">
+                            <div key={index} className="bg-green-100 border border-slate-700/50 rounded-lg p-8 shadow-md">
                                 {room && <h2 className="text-xl font-semibold">{room.room_name}</h2>}
-                                <button 
+                                <button
                                 className="mt-2 bg-green-500 text-white py-2 px-4 rounded-lg"
                                 onClick={() => {
                                     console.log("Joining room:", room.room_id);
@@ -112,6 +121,21 @@ function Home() {
                                 >
                                     Chat!
                                 </button>
+                                {/* Room settings.*/}
+                                {sessionStorage.getItem("userID") == room.owner.toString() &&
+                                  <>
+                                    <button
+                                      className="mt-2 ml-2 bg-green-500 text-white py-2 px-4 rounded-lg"
+                                      onClick={() => {
+                                        console.log("Rooms settings:", room.room_id);
+                                        sessionStorage.setItem("roomSettingsId", room.room_id.toString());
+                                        router.push("/room-settings");
+                                      }}
+                                    >
+                                      Settings
+                                    </button>
+                                  </>
+                              }
                             </div>
                         ))
                     ) : (
@@ -122,9 +146,9 @@ function Home() {
                 <div className="flex flex-grid gap-4 mb-4 w-[85%] m-auto">
                     {globalRoomList && globalRoomList.length > 0 ? (
                         globalRoomList.map((room, index) => (
-                            <div key={index} className="bg-white border border-gray-300 rounded-lg p-4 shadow-md">
+                            <div key={index} className="bg-green-100 border border-slate-700/50 rounded-lg p-8 shadow-md">
                                 {room && <h2 className="text-xl font-semibold">{room.room_name}</h2>}
-                                <button 
+                                <button
                                 className="mt-2 bg-green-500 text-white py-2 px-4 rounded-lg"
                                 onClick={() => {
                                     console.log("Joining room:", room.room_id);
@@ -135,6 +159,21 @@ function Home() {
                                 >
                                     Join Room
                                 </button>
+                                {/* Room settings (if you are a room owner) */}
+                                {sessionStorage.getItem("userID") == room.owner.toString() &&
+                                  <>
+                                    <button
+                                      className="mt-2 ml-2 bg-green-500 text-white py-2 px-4 rounded-lg"
+                                      onClick={() => {
+                                        console.log("Rooms settings:", room.room_id);
+                                        sessionStorage.setItem("roomSettingsId", room.room_id.toString());
+                                        router.push("/room-settings");
+                                      }}
+                                    >
+                                      Owner settings
+                                    </button>
+                                  </>
+                              }
                             </div>
                         ))
                     ) : (

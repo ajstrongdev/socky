@@ -15,7 +15,7 @@ interface DynamicMenuProps {
 const DynamicMenu: React.FC<DynamicMenuProps> = ({ menuItems }) => {
     return(
     <>
-        <div className="w-full flex justify-center bg-green-100 py-4 border-b border-slate-700/50 mb-8">
+        <div className="w-full flex justify-end px-4 bg-green-100 py-4 border-b border-slate-700/50 mb-8">
       {menuItems.map((item, index) => (
         <button
           key={index}

@@ -59,12 +59,22 @@ export async function GET(_req: NextRequest) {
           FOREIGN KEY (room_id) REFERENCES Rooms(room_id),
           FOREIGN KEY (user_id) REFERENCES Users(user_id)
         );
-      `);
+      `)
+
+      await pool.execute(`
+        CREATE TABLE IF NOT EXISTS Invites (
+            user_id INT NOT NULL,
+            room_id INT NOT NULL,
+            PRIMARY KEY (user_id, room_id),
+            FOREIGN KEY (user_id) REFERENCES Users(user_id),
+            FOREIGN KEY (room_id) REFERENCES Rooms(room_id)
+          );
+        `)
         return NextResponse.json({ message: 'Database and tables created successfully' });
       }
       catch (error:any) {
         console.error('Error creating database or tables:', error);
         return NextResponse.json({ error: 'Error creating database or tables' }, { status: 500 });
       }
-    
+
 }

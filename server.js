@@ -35,6 +35,8 @@ io.on("connection", (socket) => {
 
 app.prepare().then(() => {
   server.listen(4000, (err) => {
+    console.log("Server listening on port 4000.")
     if (err) throw err;
   });
 });
+  
