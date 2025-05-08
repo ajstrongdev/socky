@@ -4,8 +4,6 @@ import withAuth from "@/app/lib/withAuth";
 import { useRouter } from "next/navigation";
 import DynamicMenu from "@/app/components/DynamicMenu"
 
-
-
 function Home() {
   const router = useRouter();
 
