@@ -1,9 +1,6 @@
 "use client";
 
 import withAuth from "@/app/lib/withAuth";
-import { auth } from '@/app/firebase/config';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import {useState, useEffect} from "react";
 import { useRouter } from "next/navigation";
 import DynamicMenu from "@/app/components/DynamicMenu"
 
@@ -11,7 +8,6 @@ import DynamicMenu from "@/app/components/DynamicMenu"
 
 function Home() {
   const router = useRouter();
-  const [user] = useAuthState(auth);
 
   // Menu items
   const items = [
@@ -25,7 +21,7 @@ function Home() {
     e.preventDefault();
     const data = new FormData(e.currentTarget)
     const invitedEmail = data.get('email')
-    // Get user id 
+    // Get user id
     const getUserID = async () => {
       const response = await fetch('/api/getUserDetails', {
         method: 'POST',
@@ -62,6 +58,7 @@ function Home() {
   return (
     <>
       <div className="h-screen bg-green-200">
+        
         <DynamicMenu menuItems={items} />
         <h1 className="text-center py-4 text-4xl font-bold">
           Room Settings:
