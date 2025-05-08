@@ -29,7 +29,7 @@ export default function Home() {
         setPassword("");
         if (res && res.user) {
             console.log("User signed in, redirecting...");
-            router.push("/chat");
+            router.push("/rooms");
         } else {
             console.log("Invalid email or password");
             alert("Invalid email or password");
