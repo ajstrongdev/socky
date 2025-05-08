@@ -111,6 +111,14 @@ function Home() {
                         >
                         Accept
                         </button>
+                        <button
+                        onClick={()=> {
+                            deleteInvitation(invite.room_id)
+                            getInvites(parseInt(sessionStorage.getItem("UserID") || "0"))
+                        }}
+                        >
+                            Delete
+                        </button>
                         </div>
                     ))}
                 </ul>
