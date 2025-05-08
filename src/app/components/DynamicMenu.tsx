@@ -20,7 +20,7 @@ const DynamicMenu: React.FC<DynamicMenuProps> = ({ menuItems }) => {
         <button
           key={index}
           onClick={item.action}
-          className="bg-green-500 text-white py-2 px-4 rounded-lg"
+          className="bg-green-500 text-white py-2 px-4 mx-2 rounded-lg"
         >
           {item.text}
         </button>

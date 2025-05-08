@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
         if (!room_id || !user_id) {
             return NextResponse.json({ error: 'Room ID and User ID are required' }, { status: 400 });
         }
-        const [result] = await pool.execute(
+        await pool.execute(
             "INSERT INTO RoomMembers (room_id, user_id) VALUES (?, ?)",
             [room_id, user_id]
         );

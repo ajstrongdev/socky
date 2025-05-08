@@ -24,10 +24,13 @@ function Home() {
           text: "Create Room",
           action: () => router.push("/create-room"),
       },
+      {
+        text: "Invites",
+        action: () => router.push("/invites"),
+      }
     ]
 
     useEffect(() => {
-
         const getUserID = async () => {
             const response = await fetch('/api/getUserDetails', {
                 method: 'POST',
@@ -86,7 +89,7 @@ function Home() {
         }
         getUserID();
 
-    }, []);
+    }, [user?.email]);
 
     const joinRoom = async (roomid:number) => {
         await fetch("/api/joinRoom", {

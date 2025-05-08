@@ -11,7 +11,7 @@ function Home() {
   const items = [
     {
         text: "Back",
-        action: () => router.push("/rooms"),
+        action: () => router.push("/rooms")
     },
   ]
 
@@ -62,7 +62,7 @@ function Home() {
           Room Settings:
         </h1>
         <div className="md:w-[85%] w-[95%] m-auto">
-          <form onSubmit={inviteSubmit} className="bg-green-100 rounded-lg p-4">
+          <form onSubmit={inviteSubmit} className="bg-green-100 border border-slate-700/50 rounded-lg p-4">
             <label className="block">
               <span className="text-gray-700 text-2xl">Invite user by email:</span>
               <input

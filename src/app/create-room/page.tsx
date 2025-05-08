@@ -5,11 +5,19 @@ import { auth } from '@/app/firebase/config';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import DynamicMenu from "@/app/components/DynamicMenu";
 
 function Home() {
     const router = useRouter();
     const [user] = useAuthState(auth);
     const [userid, setUserId] = useState<number | null>(null);
+
+    const items = [
+        {
+            text: "Back",
+            action: () => router.push("/rooms")
+        }
+    ]
 
     const createRoom = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -63,29 +71,32 @@ function Home() {
 
     return (
         <>
-            <div className="flex flex-col justify-center items-center h-screen bg-green-200">
-            <div className="bg-green-100 border border-slate-700/50 rounded-lg p-8">
-                    <form onSubmit={createRoom}>
-                        <div>
-                            <label className="text-xl text-slate-700 font-semibold" htmlFor="roomName">Room Name:</label>
-                            <input
-                                className="text-slate-700 w-full p-2 my-2 rounded-lg bg-green-200 border border-slate-700/50"
-                                type="text"
-                                placeholder="Room Name"
-                                name="roomName"
-                                required
-                            />
-                        </div>
-                        <div>
-                            <input
-                                type="checkbox"
-                                id="global"
-                                name="global"
-                            />
-                            <label className="text-slate-700 font-semibold" htmlFor="global">Global Room</label>
-                        </div>
-                        <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded-lg mt-4">Create Room</button>
-                    </form>
+            <div className="h-screen bg-green-200">
+            <DynamicMenu menuItems={items} />
+                <div className="flex flex-col justify-center items-center">
+                <div className="bg-green-100 border border-slate-700/50 rounded-lg p-8">
+                        <form onSubmit={createRoom}>
+                            <div>
+                                <label className="text-xl text-slate-700 font-semibold" htmlFor="roomName">Room Name:</label>
+                                <input
+                                    className="text-slate-700 w-full p-2 my-2 rounded-lg bg-green-200 border border-slate-700/50"
+                                    type="text"
+                                    placeholder="Room Name"
+                                    name="roomName"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <input
+                                    type="checkbox"
+                                    id="global"
+                                    name="global"
+                                />
+                                <label className="text-slate-700 font-semibold" htmlFor="global">Global Room</label>
+                            </div>
+                            <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded-lg mt-4">Create Room</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </>
