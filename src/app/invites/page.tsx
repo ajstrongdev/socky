@@ -96,35 +96,42 @@ function Home() {
     return (
         <>
             <DynamicMenu menuItems={items} />
-            {inviteList && inviteList.length > 0 ? (
-                <ul>
-                    {inviteList.map((invite: Invite) => (
-                        <div key={invite.room_id}>
-                            <li key={invite.room_id}>
-                            {invite.room_name} (Owner: {invite.owner})
-                        </li>
-                        <button
-                        onClick={() => {
-                            acceptInvite(invite.room_id);
-                            getInvites(parseInt(sessionStorage.getItem("UserID") || "0"))
-                        }}
-                        >
-                        Accept
-                        </button>
-                        <button
-                        onClick={()=> {
-                            deleteInvitation(invite.room_id)
-                            getInvites(parseInt(sessionStorage.getItem("UserID") || "0"))
-                        }}
-                        >
-                            Delete
-                        </button>
-                        </div>
-                    ))}
-                </ul>
-            ) : (
-                <p>No invites to show</p>
-            )}
+            <div className="h-screen bg-green-200">
+                <div className="w-[85%] m-auto py-8">
+                <h1 className="text-4xl font-bold">Invites:</h1>
+                    {inviteList && inviteList.length >= 0 ? (
+                        <ul>
+                            {inviteList.map((invite: Invite) => (
+                                <div key={invite.room_id} className="my-4 rounded-lg bg-green-100 border border-slate-700/50 p-8">
+                                    <li key={invite.room_id}>
+                                    <h2 className="text-2xl">{invite.room_name}</h2>
+                                </li>
+                                <button
+                                className="bg-green-500 text-white py-2 px-4 mr-4 rounded-lg"
+                                onClick={async () => {
+                                     await acceptInvite(invite.room_id);
+                                     await getInvites(parseInt(sessionStorage.getItem("userID") || "0"))
+                                }}
+                                >
+                                Accept
+                                </button>
+                                <button
+                                className="bg-green-500 text-white py-2 px-4 rounded-lg"
+                                onClick={async ()=> {
+                                     await deleteInvitation(invite.room_id)
+                                     await getInvites(parseInt(sessionStorage.getItem("userID") || "0"))
+                                }}
+                                >
+                                    Delete
+                                </button>
+                                </div>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>No invites to show</p>
+                    )}
+                </div>
+            </div>
         </>
     )
 }
